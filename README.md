@@ -5,6 +5,7 @@ site of project cutlinks for generation clever links
   
 #### Презентация проекта http://cutlinks.ru/2223. 
 #### Сайт проекта http://cutlinks.ru.  
+#### Доска Trello https://trello.com/b/45RgYOjc/cutlinks
 
 Правила:
 - запуск проекта локально python main.py в терминале если что
