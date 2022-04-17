@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="icon" href="/static/image/favicon.ico">
+</head>
+<body bgcolor="#f3acb0">
+    <div style="text-align: center;">
+<h1>{{ name }}!</h1>
+{% for link in links %}
+<div><p><a href={{ links[link] }}>{{ link }}</a></p></div>
+        {% else %}
+{% endfor %}
+</div>
+</body>
+</html>

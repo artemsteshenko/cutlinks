@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="icon" href="/static/image/favicon.ico">
+<!--    <link rel="stylesheet" href='/static/style.css' />-->
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+        function copyToClipboard(element) {
+          var $temp = $("<input>");
+          $("body").append($temp);
+          $temp.val($(element).text()).select();
+          document.execCommand("copy");
+          $temp.remove();
+        }
+</script>
+
+<script>
+    function add(){
+      var new_chq_no = parseInt($('#total_chq').val())+1;
+      var new_input="<div><input type='text' name='name"+new_chq_no+"', placeholder='Название ссылки'>" +
+          "<input type='text' name='link"+new_chq_no+"', placeholder='Ссылка'></div>";
+      $('#new_chq').append(new_input);
+      $('#total_chq').val(new_chq_no)
+    }
+    function remove(){
+      var last_chq_no = $('#total_chq').val();
+      if(last_chq_no>1){
+        $('#name'+last_chq_no).remove();
+        $('#link'+last_chq_no).remove();
+        $('#total_chq').val(last_chq_no-1);
+      }
+    }
+</script>
+
+<body bgcolor="#f3acb0">
+    <div style="text-align: center;">
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+              <button onclick="add()">Add</button>
+              <button onclick="remove()">remove</button>
+        <form action="/your_tree_link" method = "POST">
+              <input type="text", name="name", placeholder="Название страницы">
+              <div id="new_chq"></div>
+              <input type="hidden" value="0" id="total_chq">
+
+           <p><input type = "submit" value = "Получить мультиссылку" /></p>
+        </form>
+        {% if forward_message %}
+        <p id="p1">{{ forward_message }}</p>
+        <p><button onclick="copyToClipboard('#p1')">Копировать ссылку</button></p>
+        {% endif %}
+    </div>
+</body>
+</html>
