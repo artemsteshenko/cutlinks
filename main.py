@@ -23,6 +23,24 @@ def shortlink():
     return render_template('shortlink.html')
 
 
+@application.route('/statistic')
+def statistic():
+    return render_template('stat.html')
+
+
+@application.route('/stat', methods=['POST', 'GET'])
+def stat():
+    link = request.form['link']
+    link_id = link.split('/')[-1]
+
+    cursor = mydb.cursor()
+    cursor.execute(f"SELECT * FROM clicks where link = '{link_id}'")
+    myresult = cursor.fetchall()
+    cursor.close()
+
+    return render_template('shortlink.html', forward_message=f'http://cutlinks.ru/{hash}')
+
+
 @application.route('/multilink')
 def multilink():
     return render_template('multilink.html')
