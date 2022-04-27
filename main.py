@@ -2,6 +2,9 @@ import mysql.connector
 from flask import Flask, redirect, render_template, request
 import uuid
 import json
+import plotly.express as px
+import pandas as pd
+import plotly
 
 application = Flask(__name__)
 
@@ -32,13 +35,27 @@ def statistic():
 def stat():
     link = request.form['link']
     link_id = link.split('/')[-1]
+    print(link_id)
 
     cursor = mydb.cursor()
-    cursor.execute(f"SELECT * FROM clicks where link = '{link_id}'")
+    cursor.execute(f"SELECT created_at FROM clicks where link = '{link_id}'")
     myresult = cursor.fetchall()
     cursor.close()
 
-    return render_template('shortlink.html', forward_message=f'http://cutlinks.ru/{hash}')
+    if len(myresult) == 0:
+        return '<h3>Нет кликов</h3>'
+
+    correct_result = []
+    for i in myresult:
+        correct_result.append(i[0])
+
+    mySeries = pd.Series(correct_result).dt.normalize().value_counts().sort_index()
+    fig = px.bar(mySeries,
+                  x=mySeries.index,
+                  y=mySeries.values,
+                  title='Количество кликов по ссылке')
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('notdash.html', graphJSON=graphJSON)
 
 
 @application.route('/multilink')
