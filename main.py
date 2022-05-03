@@ -1,16 +1,19 @@
-import mysql.connector
-from flask import Flask, redirect, render_template, request
 import uuid
 import json
+
+import mysql.connector
+from flask import Flask, redirect, render_template, request
 import plotly.express as px
 import pandas as pd
 import plotly
+
+from statistic_plots import number_clicks_plot
 
 application = Flask(__name__)
 
 mydb = mysql.connector.connect(
   database='u1650045_default',
-  host="cutlinks_local.ru",
+  host="cutlinks.ru",
   user="u1650045_default",
   password="mqGIBF31HU1x8zxo"
 )
@@ -19,12 +22,6 @@ mydb = mysql.connector.connect(
 @application.route('/')
 def hello():
     return render_template('design.html')
-
-
-@application.route('/shortlink')
-def shortlink():
-    return render_template('shortlink.html')
-
 
 @application.route('/statistic')
 def statistic():
@@ -45,17 +42,17 @@ def stat():
     if len(myresult) == 0:
         return '<h3>Нет кликов</h3>'
 
-    correct_result = []
-    for i in myresult:
-        correct_result.append(i[0])
-
-    mySeries = pd.Series(correct_result).dt.normalize().value_counts().sort_index()
-    fig = px.bar(mySeries,
-                  x=mySeries.index,
-                  y=mySeries.values,
-                  title='Количество кликов по ссылке')
+    clicks = [click[0] for click in myresult]
+    clicks_Series = pd.Series(clicks).dt.normalize().value_counts().sort_index()
+    fig = number_clicks_plot(clicks_Series)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('notdash.html', graphJSON=graphJSON)
+    return render_template('notdash.html', graphJSON=graphJSON, link=link)
+
+
+
+@application.route('/shortlink')
+def shortlink():
+    return render_template('shortlink.html')
 
 
 @application.route('/multilink')
@@ -67,6 +64,7 @@ def cut(link_id):
     mydb.reconnect()
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT * FROM links where link_id = '{link_id}'")
+    # mycursor.execute("SELECT * FROM links where link_id = " + link_id)
     myresult = mycursor.fetchall()
     mycursor.close()
     if len(myresult) == 0:
@@ -77,7 +75,8 @@ def cut(link_id):
 def tree(link_id):
     mydb.reconnect()
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT * FROM treelinks where link_id = '{link_id}'")
+    mycursor.execute(f"SELECT * FROM treelinks"
+                     f" where link_id = '{link_id}'")
     myresult = mycursor.fetchall()
     mycursor.close()
     if len(myresult) == 0:
