@@ -16,9 +16,9 @@ def number_clicks_plot(clicks_Series):
         x=y_per,
         y=x,
         marker=dict(
-            color='rgba(50, 171, 96, 0.6)',
+            color='rgb(116, 158, 170)',
             line=dict(
-                color='rgba(50, 171, 96, 1.0)',
+                color='rgb(116, 158, 170)',
                 width=1),
         ),
         name='Отношение кликов за день к кликам за всю историю по ссылке',
@@ -89,7 +89,7 @@ def number_clicks_plot(clicks_Series):
                                 y=xd, x=yd + 3,
                                 text=str(yd) + '%',
                                 font=dict(family='Arial', size=12,
-                                          color='rgb(50, 171, 96)'),
+                                          color='rgb(116, 158, 170)'),
                                 showarrow=False))
     # Source
     annotations.append(dict(xref='paper', yref='paper',
