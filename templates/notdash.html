@@ -1,18 +1,20 @@
-<!doctype html>
-<html>
- <head>
-
- </head>
- <body>
+{% extends 'header.html' %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block content %}
+<body>
+<div class="container-fluid p-5 my-1" >
   <h1>
    Ваша статистика по ссылке
    <a href={{ link }}>{{ link }}</a>
   </h1>
   <div id='chart' class='chart'”></div>
+</div>
 </body>
 <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 <script type='text/javascript'>
   var graphs = {{graphJSON | safe}}
   Plotly.plot('chart',graphs,{});
 </script>
-</html>
+{% endblock %}

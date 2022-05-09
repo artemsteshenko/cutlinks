@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/static/image/favicon.ico">
-    <link rel="stylesheet" href='/static/style.css' />
-</head>
+{% extends 'header.html' %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block content %}
 
 <body>
-    <div style="text-align: center;" class="center">
-        <h1>Статистика</h1>
 
-        <form action="/stat" method = "POST">
-           <div class="inputbox"><input type = "text" name = "link", placeholder="Короткая ссылка"/></div>
-           <div class="inputbox"><input type = "submit" value = "Получить статистику" /></div>
-        </form>
+    <div class="container-fluid p-5 my-1" >
+        <div class="row">
+            <div class="col-sm-4">
+                <h1>Статистика</h1>
+
+                <form action="/stat" method = "POST">
+                  <div class="mb-3">
+                      <input class="form-control" type = "text" name = "link" placeholder="Короткая ссылка"/>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Получить статистику</button>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <p class="lead">
+                    Статистика доступна для  <mark>коротких ссылок и мультиссылок</mark>.
+                    Вам будет предоставлен график количества запросов за все время существования ссылки.
+                    Таким образом вы сможете отслеживать <mark>динамику изменений переходов</mark> на ваши страницы и короткие ссылки
+                </p>
+            </div>
+        </div>
     </div>
 
 
 </body>
-</html>
+{% endblock %}
