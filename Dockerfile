@@ -16,6 +16,7 @@ RUN cd /tmp \
     && ./configure --enable-optimizations \
     && make altinstall
 
+COPY requirements.txt ./requirements.txt
 RUN pip3.9 install --upgrade -r requirements.txt
 
 COPY static ./static
@@ -23,6 +24,5 @@ COPY templates ./templates
 COPY parse_multilink.py ./parse_multilink.py
 COPY main.py ./main.py
 COPY statistic_plots.py ./statistic_plots.py
-COPY requirements.txt ./requirements.txt
 
 CMD ["python3.9", "./main.py"]
