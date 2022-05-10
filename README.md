@@ -7,6 +7,9 @@ site of project cutlinks for generation clever links
 #### Сайт проекта http://cutlinks.ru.  
 #### Доска Trello https://trello.com/b/45RgYOjc/cutlinks
 
-Правила:
-- запуск проекта локально python main.py в терминале если что
-- пушить можно только в свою ветку а потом pull request мне (artemsteshenko)
+
+- Запуск проекта локально python main.py
+- Запуск проекта в docker:
+    - docker build -t cutlinks .
+    - docker run --rm -t -i -p 5000:5000 cutlinks
+- Пушить можно только в свою ветку а потом pull request мне (artemsteshenko)
