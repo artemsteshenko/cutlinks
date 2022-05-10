@@ -1,0 +1,74 @@
+{% extends 'header.html' %}
+{% block title %}
+Главная
+{% endblock %}
+{% block content %}
+
+<!--{% include 'includes/carousel.html' %}-->
+{% include 'includes/heading.html' %}
+<div class="container p-3">
+  {% include 'includes/forwhom.html' %}
+</div>
+<div class="container p-1 my-1">
+  <div class="row">
+    <div class="text-center col-sm-3 p-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Для кого наш сервис?</button>
+    </div>
+    <div class="text-center col-sm-3 p-1">
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasStart" aria-controls="offcanvasRight">Как пользоваться?</button>
+    </div>
+    <div class="text-center col-sm-3 p-1">
+      <a href="/shortlink" class="btn btn-primary">Сделать короткую ссылку</a>
+    </div>
+    <div class="text-center col-sm-3 p-1">
+      <a href="/multilink" class="btn btn-primary">Сделать свою страницу</a>
+    </div>
+  </div>
+</div>
+
+{% include 'includes/hints.html' %}
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Для кого наш сервис?</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      <p>Этот сервис для любого человека, в частности он будет полезен:</p>
+      <dl>
+        <dt>Блогеры</dt>
+        <dd>- размещение всех соцсетей в одной мультиссылке</dd>
+          <dd>- отслеживание статистики</dd>
+          <dd>- сбор донатов</dd>
+          <dd>- сокращение большой ссылки для лаконичности постов</dd>
+        <dt>Продавцы</dt>
+        <dd>- размещение товаров на своей странице (мультиссылке)</dd>
+          <dd>- прием оплаты</dd>
+          <dt>Самозанятые</dt>
+          <dd>- отслеживание статистики</dd>
+        <dd>- демонстрация своих работ</dd>
+          <dd>- запись на прием</dd>
+          <dd>- использование как портфолио</dd>
+          <dd>- прием оплаты</dd>
+          <dt>Преподаватели</dt>
+          <dd>- создание страницы (мультиссылки) курса</dd>
+        <dd>- сбор работ</dd>
+          <dd>- возможность делиться полезными материалами одной ссылкой</dd>
+      </dl>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasStart" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasStartLabel">Как пользоваться?</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+      <p>Если вам необходимо сделать ссылку короче, то <a href="/shortlink">это ваш раздел!</a></p>
+      <p>Если вы хотите сделать свою страницу для интернет-магазина или для своих ссылок, то вам поможет <a href="/multilink">этот раздел!</a></p>
+  </div>
+</div>
+
+{% include 'includes/pricing.html' %}
+
+{% endblock %}

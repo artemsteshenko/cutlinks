@@ -1,0 +1,33 @@
+{% extends 'header.html' %}
+{% block title %}
+Статистика
+{% endblock %}
+{% block content %}
+
+<body>
+
+    <div class="container-fluid p-5 my-1" >
+        <div class="row">
+            <div class="col-sm-4">
+                <h1>Статистика</h1>
+
+                <form action="/stat" method = "POST">
+                  <div class="mb-3">
+                      <input class="form-control" type = "text" name = "link" placeholder="Короткая ссылка"/>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Получить статистику</button>
+                </form>
+            </div>
+            <div class="col-sm-4">
+                <p class="lead">
+                    Статистика доступна для  <mark>коротких ссылок и мультиссылок</mark>.
+                    Вам будет предоставлен график количества запросов за все время существования ссылки.
+                    Таким образом вы сможете отслеживать <mark>динамику изменений переходов</mark> на ваши страницы и короткие ссылки
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+{% endblock %}
