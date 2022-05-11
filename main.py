@@ -3,14 +3,19 @@ import json
 
 import mysql.connector
 from flask import Flask, redirect, render_template, request
-import plotly.express as px
 import pandas as pd
 import plotly
+
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 
 from statistic_plots import number_clicks_plot
 from parse_multilink import parse_multilink, create_multilink
 
+
 application = Flask(__name__)
+application.config['SECRET_KEY'] = 'some-easy-key'
 
 mydb = mysql.connector.connect(
   database='u1650045_default',
@@ -18,6 +23,12 @@ mydb = mysql.connector.connect(
   user="u1650045_default",
   password="mqGIBF31HU1x8zxo"
 )
+
+class LoginForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Sign In')
 
 
 @application.route('/')
@@ -30,9 +41,14 @@ def subscribe():
     return render_template('subscribe.html')
 
 
-@application.route('/registration')
+@application.route('/registration', methods=['POST', 'GET'])
 def registration():
-    return render_template('registration.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        print('Login requested for user {}, remember_me={}, password {}'.format(
+            form.username.data, form.remember_me.data, form.password.data))
+        return redirect('/')
+    return render_template('registration.html', title='Sign In', form=form)
 
 
 @application.route('/statistic')
@@ -59,7 +75,6 @@ def stat():
     fig = number_clicks_plot(clicks_Series)
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     return render_template('notdash.html', graphJSON=graphJSON, link=link)
-
 
 
 @application.route('/shortlink')
@@ -90,7 +105,6 @@ def tree(link_id):
     return render_template('profile.html', name=page_name, desc=desc, links=links, goods=goods)
 
 
-
 @application.route("/<link_id>")
 def multiple(link_id):
     cursor = mydb.cursor()
@@ -102,7 +116,6 @@ def multiple(link_id):
         return cut(link_id)
     else:
         return tree(link_id)
-
 
 
 @application.route('/your_short_link', methods=['POST', 'GET'])
@@ -125,9 +138,8 @@ def your_tree_link():
     return render_template('multilink.html', forward_message=f'{hash}')
 
 
-
-
 if __name__ == '__main__':
+
     application.run(host='0.0.0.0')
 
 # import dash

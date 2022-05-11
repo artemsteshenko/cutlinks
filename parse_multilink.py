@@ -1,10 +1,6 @@
 import uuid
 import json
 
-import mysql.connector
-from flask import Flask, redirect, render_template, request
-import plotly.express as px
-import pandas as pd
 
 def create_multilink(request, mydb):
     print(request.form)
@@ -33,7 +29,6 @@ def parse_multilink(mydb, link_id):
     mycursor.close()
     if len(myresult) == 0:
         return '<h3>Нет такой мульти ссылки</h3>'
-
 
     print(myresult)
     desc = 'Описание страницы'
