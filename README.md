@@ -8,7 +8,7 @@ site of project cutlinks for generation clever links
 #### Доска Trello https://trello.com/b/45RgYOjc/cutlinks
 
 
-- Запуск проекта локально python main.py
+- Запуск проекта локально python app/main.py
 - Запуск проекта в docker:
     - docker build -t cutlinks .
     - docker run --rm -t -i -p 5000:5000 cutlinks
