@@ -1,34 +1,20 @@
 import uuid
 import json
+import logging
 
-import mysql.connector
 from flask import Flask, redirect, render_template, request
 import pandas as pd
 import plotly
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
-
 from statistic_plots import number_clicks_plot
-from parse_multilink import parse_multilink, create_multilink
+from utils import LoginForm, mydb, tree
+from parse_multilink import create_multilink
 
 
 application = Flask(__name__)
 application.config['SECRET_KEY'] = 'some-easy-key'
 
-mydb = mysql.connector.connect(
-  database='u1650045_default',
-  host="cutlinks.ru",
-  user="u1650045_default",
-  password="mqGIBF31HU1x8zxo"
-)
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
+logging.basicConfig(encoding='utf-8', level=logging.INFO)
 
 
 @application.route('/')
@@ -45,7 +31,7 @@ def subscribe():
 def registration():
     form = LoginForm()
     if form.validate_on_submit():
-        print('Login requested for user {}, remember_me={}, password {}'.format(
+        logging.info('Login requested for user {}, remember_me={}, password {}'.format(
             form.username.data, form.remember_me.data, form.password.data))
         return redirect('/')
     return render_template('registration.html', title='Sign In', form=form)
@@ -60,7 +46,7 @@ def statistic():
 def stat():
     link = request.form['link']
     link_id = link.split('/')[-1]
-    print(link_id)
+    logging.info(link_id)
 
     cursor = mydb.cursor()
     cursor.execute(f"SELECT created_at FROM clicks where link = '{link_id}'")
@@ -91,18 +77,11 @@ def cut(link_id):
     mydb.reconnect()
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT * FROM links where link_id = '{link_id}'")
-    # mycursor.execute("SELECT * FROM links where link_id = " + link_id)
     myresult = mycursor.fetchall()
     mycursor.close()
     if len(myresult) == 0:
         return '<h3>Нет такой короткой ссылки</h3>'
     return redirect(myresult[0][1], code=302)
-
-
-def tree(link_id):
-    page_name, desc, goods, links = parse_multilink(mydb, link_id)
-    # links = json.loads(myresult[0][1])
-    return render_template('profile.html', name=page_name, desc=desc, links=links, goods=goods)
 
 
 @application.route("/<link_id>")
@@ -139,19 +118,4 @@ def your_tree_link():
 
 
 if __name__ == '__main__':
-
     application.run(host='0.0.0.0')
-
-# import dash
-# import dash_bootstrap_components as dbc
-#
-# app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-#
-# app.layout = dbc.Container(
-#     dbc.Alert("Hello Bootstrap!", color="success"),
-#     className="p-5",
-# )
-#
-# if __name__ == "__main__":
-#     app.run_server()
-#

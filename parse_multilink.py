@@ -1,12 +1,13 @@
 import uuid
 import json
+import logging
 
 
 def create_multilink(request, mydb):
-    print(request.form)
+    logging.info(request.form)
     page_name = request.form['page_name_0']
     links = request.form.to_dict()
-    print(links)
+    logging.info(links)
     links = json.dumps(links, ensure_ascii=False)
 
     hash = uuid.uuid4().hex[:6]
@@ -30,7 +31,7 @@ def parse_multilink(mydb, link_id):
     if len(myresult) == 0:
         return '<h3>Нет такой мульти ссылки</h3>'
 
-    print(myresult)
+    logging.info(myresult)
     desc = 'Описание страницы'
     page_name = myresult[0][2]
     elements = json.loads(myresult[0][1])
@@ -38,7 +39,7 @@ def parse_multilink(mydb, link_id):
     link_names, links = [], []
     good_names, good_descs, good_prices, good_link_buys = [], [], [], []
     for el in elements:
-        print(el)
+        logging.info(el)
         if el[:9] == 'link_name':
             link_names.append(elements[el])
         elif el[:4] == 'link':
@@ -55,6 +56,6 @@ def parse_multilink(mydb, link_id):
             good_link_buys.append(elements[el])
     dict_links = dict(zip(link_names, links))
     dict_goods = {i: [j, k, s, h] for i, j, k, s, h in zip(range(len(good_names)), good_names, good_descs, good_prices, good_link_buys)}
-    print(dict_links)
-    print(dict_goods)
+    logging.info(dict_links)
+    logging.info(dict_goods)
     return page_name, desc, dict_goods, dict_links
