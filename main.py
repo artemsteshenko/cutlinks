@@ -1,23 +1,20 @@
 import uuid
 import json
+import logging
 
-import mysql.connector
 from flask import Flask, redirect, render_template, request
-import plotly.express as px
 import pandas as pd
 import plotly
 
 from statistic_plots import number_clicks_plot
-from parse_multilink import parse_multilink, create_multilink
+from utils import LoginForm, mydb, tree
+from parse_multilink import create_multilink
+
 
 application = Flask(__name__)
+application.config['SECRET_KEY'] = 'some-easy-key'
 
-mydb = mysql.connector.connect(
-  database='u1650045_default',
-  host="cutlinks.ru",
-  user="u1650045_default",
-  password="mqGIBF31HU1x8zxo"
-)
+logging.basicConfig(encoding='utf-8', level=logging.INFO)
 
 
 @application.route('/')
@@ -30,9 +27,14 @@ def subscribe():
     return render_template('subscribe.html')
 
 
-@application.route('/registration')
+@application.route('/registration', methods=['POST', 'GET'])
 def registration():
-    return render_template('registration.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        logging.info('Login requested for user {}, remember_me={}, password {}'.format(
+            form.username.data, form.remember_me.data, form.password.data))
+        return redirect('/')
+    return render_template('registration.html', title='Sign In', form=form)
 
 
 @application.route('/statistic')
@@ -44,7 +46,7 @@ def statistic():
 def stat():
     link = request.form['link']
     link_id = link.split('/')[-1]
-    print(link_id)
+    logging.info(link_id)
 
     cursor = mydb.cursor()
     cursor.execute(f"SELECT created_at FROM clicks where link = '{link_id}'")
@@ -61,7 +63,6 @@ def stat():
     return render_template('notdash.html', graphJSON=graphJSON, link=link)
 
 
-
 @application.route('/shortlink')
 def shortlink():
     return render_template('shortlink.html')
@@ -76,19 +77,11 @@ def cut(link_id):
     mydb.reconnect()
     mycursor = mydb.cursor()
     mycursor.execute(f"SELECT * FROM links where link_id = '{link_id}'")
-    # mycursor.execute("SELECT * FROM links where link_id = " + link_id)
     myresult = mycursor.fetchall()
     mycursor.close()
     if len(myresult) == 0:
         return '<h3>Нет такой короткой ссылки</h3>'
     return redirect(myresult[0][1], code=302)
-
-
-def tree(link_id):
-    page_name, desc, goods, links = parse_multilink(mydb, link_id)
-    # links = json.loads(myresult[0][1])
-    return render_template('profile.html', name=page_name, desc=desc, links=links, goods=goods)
-
 
 
 @application.route("/<link_id>")
@@ -102,7 +95,6 @@ def multiple(link_id):
         return cut(link_id)
     else:
         return tree(link_id)
-
 
 
 @application.route('/your_short_link', methods=['POST', 'GET'])
@@ -125,21 +117,5 @@ def your_tree_link():
     return render_template('multilink.html', forward_message=f'{hash}')
 
 
-
-
 if __name__ == '__main__':
     application.run(host='0.0.0.0')
-
-# import dash
-# import dash_bootstrap_components as dbc
-#
-# app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-#
-# app.layout = dbc.Container(
-#     dbc.Alert("Hello Bootstrap!", color="success"),
-#     className="p-5",
-# )
-#
-# if __name__ == "__main__":
-#     app.run_server()
-#
