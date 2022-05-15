@@ -19,10 +19,10 @@ RUN cd /tmp \
 COPY requirements.txt ./requirements.txt
 RUN pip3.9 install --upgrade -r requirements.txt
 
-COPY static ./static
-COPY templates ./templates
-COPY parse_multilink.py ./parse_multilink.py
-COPY main.py ./main.py
-COPY statistic_plots.py ./statistic_plots.py
+COPY app/static ./static
+COPY app/templates ./templates
+COPY app/parse_multilink.py ./parse_multilink.py
+COPY app/main.py ./main.py
+COPY app/statistic_plots.py ./statistic_plots.py
 
 CMD ["python3.9", "./main.py"]
