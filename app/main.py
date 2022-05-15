@@ -1,54 +1,16 @@
 import uuid
 import logging
 
-from flask import Flask, redirect, render_template, request
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask import redirect, render_template, request
 
 from utils import LoginForm, mydb, tree
 from parse_multilink import create_multilink
-from config import Config
-from shortlink import shortlink_blueprint
-from statistics import statistic_blueprint
 
-application = Flask(__name__)
-application.config.from_object(Config)
-application.register_blueprint(shortlink_blueprint)
-application.register_blueprint(statistic_blueprint)
+from __init__ import db, create_app
+from models import Links, Clicks, Treelinks
+application = create_app()
 
 logging.basicConfig(encoding='utf-8', level=logging.INFO)
-
-db = SQLAlchemy(application)
-
-
-class Links(db.Model):
-    link_id = db.Column(db.String(5), primary_key=True)
-    link = db.Column(db.String(1000))
-    username = db.Column(db.String(1000))
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-    def __repr__(self):
-        return '<link {}>'.format(self.link)
-
-
-class Treelinks(db.Model):
-    link_id = db.Column(db.String(6), primary_key=True)
-    link = db.Column(db.String(1000))
-    name = db.Column(db.String(1000))
-    username = db.Column(db.String(1000))
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-    def __repr__(self):
-        return '<link {}>'.format(self.link)
-
-
-class Clicks(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    link = db.Column(db.String(1000))
-    created_at = db.Column(db.DateTime, default=datetime.now)
-
-    def __repr__(self):
-        return '<link {}>'.format(self.link)
 
 
 @application.route('/')
@@ -94,7 +56,7 @@ def multiple(link_id):
     click = Clicks(link=link_id)
     db.session.add(click)
     db.session.commit()
-
+    logging.info('click - {}'.format(link_id))
     if len(link_id) == 4:
         return cut(link_id)
     else:
