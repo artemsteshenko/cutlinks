@@ -8,8 +8,12 @@ site of project cutlinks for generation clever links
 #### Доска Trello https://trello.com/b/45RgYOjc/cutlinks
 
 
-- Запуск проекта локально python app/main.py
+- Запуск проекта локально 
+  - установить переменную окружения FLASK_APP
+    (export FLASK_APP=cutlinks.py)
+  - flask run
+  
 - Запуск проекта в docker:
     - docker build -t cutlinks .
     - docker run --rm -t -i -p 5000:5000 cutlinks
-- Пушить можно только в свою ветку а потом pull request мне (artemsteshenko)
+- Пушить можно только в свою ветку а потом pull request мне (artemsteshenko или Roma646)

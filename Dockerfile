@@ -19,10 +19,9 @@ RUN cd /tmp \
 COPY requirements.txt ./requirements.txt
 RUN pip3.9 install --upgrade -r requirements.txt
 
-COPY app/static ./static
-COPY app/templates ./templates
-COPY app/parse_multilink.py ./parse_multilink.py
-COPY app/main.py ./main.py
-COPY app/statistic_plots.py ./statistic_plots.py
+COPY app app
+COPY config.py config.py
+COPY cutlinks.py cutlinks.py
+ARG FLASK_APP=cutlinks.py
 
-CMD ["python3.9", "./main.py"]
+CMD flask run --port=5000
