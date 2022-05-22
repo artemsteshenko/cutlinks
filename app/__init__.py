@@ -1,17 +1,22 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_login import LoginManager
+
 from config import Config
 
-from shortlink import shortlink_blueprint
-from statistics import statistic_blueprint
 
-db = SQLAlchemy()
+application = Flask(__name__)
+application.config.from_object(Config)
 
+db = SQLAlchemy(application)
+migrate = Migrate(application, db)
+login = LoginManager(application)
+login.login_view = 'login'
 
-def create_app(config_class=Config):
-    application = Flask(__name__)
-    application.config.from_object(config_class)
-    application.register_blueprint(shortlink_blueprint)
-    application.register_blueprint(statistic_blueprint)
-    db.init_app(application)
-    return application
+from app import routes, models
+from app.shortlink import shortlink_blueprint
+from app.statistics import statistic_blueprint
+
+application.register_blueprint(shortlink_blueprint)
+application.register_blueprint(statistic_blueprint)
