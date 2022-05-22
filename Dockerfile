@@ -13,7 +13,7 @@ RUN cd /tmp \
     && wget https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz \
     && tar xzf Python-3.9.9.tgz \
     && cd Python-3.9.9 \
-    && ./configure --enable-optimizatiodns \
+    && ./configure --enable-optimizations \
     && make altinstall
 
 COPY requirements.txt ./requirements.txt
