@@ -1,0 +1,18 @@
+{
+  "include": ["server"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true, // prevents cross-OS problems
+    "resolveJsonModule": true, // enable import of JSON files
+    "lib": ["es6", "dom", "dom.iterable", "esnext"], // use JavaScript API ES6
+    "target": "es6",
+    "jsx": "react",
+    "allowJs": true,
+    // enable strict type checking
+    "strict": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false
+  }
+}
