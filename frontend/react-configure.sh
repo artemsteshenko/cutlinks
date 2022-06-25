@@ -22,6 +22,7 @@ function initialize_defaults() {
   npm i --save-dev babel-eslint @babel/runtime @babel/cli
   npm i --save-dev eslint eslint-config-airbnb-base eslint-plugin-jest eslint-config-prettier path
   npm i react react-dom react-router react-router-dom
+  npm i axios
 
   mkdir src
   mkdir public
